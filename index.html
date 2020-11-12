@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jiahe Chen" />
+
+
+<title>Final Project</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Final Project</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Final Project</h1>
+<h4 class="author">Jiahe Chen</h4>
+
+</div>
+
+
+<pre class="r"><code>raw_data &lt;- fread(&quot;https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv&quot;)
+
+raw_data [, c(&quot;UID&quot;, &quot;iso2&quot;, &quot;iso3&quot;, &quot;code3&quot;, &quot;FIPS&quot;, &quot;Lat&quot;, &quot;Long_&quot;, &quot;Country_Region&quot;) := NULL]
+raw_data &lt;- filter(raw_data, Province_State != &quot;Diamond Princess&quot; &amp; Province_State != &quot;Grand Princess&quot;)
+
+which(is.na(raw_data))</code></pre>
+<pre><code>## integer(0)</code></pre>
+<pre class="r"><code>county_case = melt(raw_data,
+                   id.vars = c(&quot;Admin2&quot;, &quot;Province_State&quot;, &quot;Combined_Key&quot;),
+                   measure.vars = 4:ncol(raw_data))
+
+setnames(county_case,
+         c(&quot;Admin2&quot;, &quot;Province_State&quot;, &quot;Combined_Key&quot;, &quot;variable&quot;, &quot;value&quot;),
+         c(&quot;county&quot;, &quot;state&quot;, &quot;combined_county_name&quot;, &quot;date&quot;, &quot;case&quot;))
+
+state_case &lt;- as.data.table(rbind(county_case %&gt;% group_by(state, date) %&gt;% summarise(case = sum(case)),
+                    county_case %&gt;% group_by(date) %&gt;% summarise(case = sum(case), state = &quot;US Total&quot;)))
+
+state_abbr &lt;- fread(&quot;https://github.com/jasonong/List-of-US-States/raw/master/states.csv&quot;)
+
+state_case &lt;- merge.data.table(state_case, state_abbr, by.x = &quot;state&quot;, by.y = &quot;State&quot;, all = TRUE)
+
+setnames(state_case, &quot;Abbreviation&quot;, &quot;abbr&quot;)
+
+state_case [, new := case - lag(case)]
+state_case [, log_new := log(new)]
+state_case [log_new == -Inf, log_new := 0]
+state_case &lt;- filter(state_case, date != &quot;1/22/20&quot;)
+state_case [, date := as.Date(date, &quot;%m/%d/%y&quot;)]
+setorder(state_case, state, date)</code></pre>
+<pre class="r"><code>shadeLimit &lt;- 10
+
+may &lt;- state_case %&gt;% filter(date==&quot;2020-05-01&quot;) %&gt;% select(state, abbr, case, new, log_new)
+
+may$hover &lt;- with(may, paste(state, &#39;&lt;br&gt;&#39;, &quot;Cumulative Cases: &quot;, case, &#39;&lt;br&gt;&#39;, &quot;New Cases: &quot;, new))
+
+set_map_details &lt;- list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;))
+
+fig &lt;- plot_geo(may, locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = &#39;Reds&#39;
+  )
+fig &lt;- fig %&gt;% colorbar(title = &quot;Log New Cases May 1 2020&quot;, limits = c(0,shadeLimit))
+fig &lt;- fig %&gt;% layout(
+    title = paste(&#39;Log of New Cases by State &lt;br&gt; (Hover for value)&#39;),
+    geo = set_map_details
+  )
+fig_may &lt;- fig
+
+august &lt;- state_case %&gt;% filter(date==&quot;2020-08-01&quot;) %&gt;% select(state, abbr, case, new, log_new)
+
+august$hover &lt;- with(august, paste(state, &#39;&lt;br&gt;&#39;, &quot;Cumulative Cases: &quot;, case, &#39;&lt;br&gt;&#39;, &quot;New Cases: &quot;, new))
+
+set_map_details &lt;- list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;))
+
+fig &lt;- plot_geo(august, locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = &#39;Reds&#39;
+  )
+fig &lt;- fig %&gt;% colorbar(title = &quot;Log New Cases August 1 2020&quot;, limits = c(0,shadeLimit))
+fig &lt;- fig %&gt;% layout(
+    title = paste(&#39;Log of New Cases by State &lt;br&gt; (Hover for value)&#39;),
+    geo = set_map_details
+  )
+fig_august &lt;- fig
+
+today &lt;- state_case %&gt;% filter(date==Sys.Date()) %&gt;% select(state, abbr, case, new, log_new)
+
+today$hover &lt;- with(august, paste(state, &#39;&lt;br&gt;&#39;, &quot;Cumulative Cases: &quot;, case, &#39;&lt;br&gt;&#39;, &quot;New Cases: &quot;, new))
+
+set_map_details &lt;- list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;))
+
+fig &lt;- plot_geo(today, locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = &#39;Reds&#39;
+  )
+fig &lt;- fig %&gt;% colorbar(title = &quot;Log New Cases Today&quot;, limits = c(0,shadeLimit))
+fig &lt;- fig %&gt;% layout(
+    title = paste(&#39;Log of New Cases by State &lt;br&gt; (Hover for value)&#39;),
+    geo = set_map_details
+  )
+fig_today &lt;- fig
+
+plot_1 &lt;- subplot(fig_may, fig_august, fig_today)</code></pre>
+<pre class="r"><code>cal &lt;- state_case %&gt;% filter(state==&quot;California&quot; | state == &quot;US Total&quot;)
+
+plot_2 &lt;- plot_ly(cal, x = ~date, y = ~log_new, color = ~state, type = &quot;scatter&quot;, mode = &quot;lines&quot;)
+
+plot_3 &lt;- plot_ly(cal, x = ~date, y = ~case, color = ~state, type = &quot;scatter&quot;, mode = &quot;lines&quot;)</code></pre>
+<div id="showcasing-plots" class="section level2 tabset">
+<h2>Showcasing plots</h2>
+<div id="figure-1" class="section level3">
+<h3>Figure 1</h3>
+<div id="htmlwidget-c708c7c570073a912410" style="width:700px;height:415.296px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c708c7c570073a912410">{"x":{"data":[{"colorbar":{"title":"Log New Cases May 1 2020","ticklen":2,"len":0.25,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":true,"locationmode":"USA-states","z":[5.32787616878958,2.19722457733622,0,5.74939298590825,4.02535169073515,7.54750168281497,6.23244801655052,6.96979066990159,5.21493575760899,5.81413053182507,6.94505106372583,7.11069612297883,0,0,3.43398720448515,8.05102220819068,6.67834211465433,6.6052979209482,5.39816270151775,5.15905529921453,6.56526497003536,3.3322045101752,7.45587668749182,7.64300363556072,6.95272864462487,6.38687931936265,5.98393628068719,5.4553211153577,0,6.58892647753352,5.27299955856375,5.0998664278242,7.83913164827433,4.62497281328427,8.27944348771267,6.14203740558736,3.68887945411394,0,6.57368016696065,4.86753445045558,4.23410650459726,7.38274644973891,2.19722457733622,5.83188247728352,5.09375020080676,4.33073334028633,7.05272104923232,6.87212810133899,null,5.04985600724954,2.56494935746154,0,6.96129604591017,5.73657229747919,3.29583686600433,6.13122648948314,1.94591014905531],"text":["Alabama <br> Cumulative Cases:  7294 <br> New Cases:  206","Alaska <br> Cumulative Cases:  369 <br> New Cases:  9","American Samoa <br> Cumulative Cases:  0 <br> New Cases:  0","Arizona <br> Cumulative Cases:  7969 <br> New Cases:  314","Arkansas <br> Cumulative Cases:  3337 <br> New Cases:  56","California <br> Cumulative Cases:  52026 <br> New Cases:  1896","Colorado <br> Cumulative Cases:  15793 <br> New Cases:  509","Connecticut <br> Cumulative Cases:  28764 <br> New Cases:  1064","Delaware <br> Cumulative Cases:  4918 <br> New Cases:  184","District of Columbia <br> Cumulative Cases:  4658 <br> New Cases:  335","Florida <br> Cumulative Cases:  34728 <br> New Cases:  1038","Georgia <br> Cumulative Cases:  27489 <br> New Cases:  1225","Guam <br> Cumulative Cases:  145 <br> New Cases:  0","Hawaii <br> Cumulative Cases:  619 <br> New Cases:  1","Idaho <br> Cumulative Cases:  2015 <br> New Cases:  31","Illinois <br> Cumulative Cases:  56055 <br> New Cases:  3137","Indiana <br> Cumulative Cases:  18630 <br> New Cases:  795","Iowa <br> Cumulative Cases:  7884 <br> New Cases:  739","Kansas <br> Cumulative Cases:  4634 <br> New Cases:  221","Kentucky <br> Cumulative Cases:  4882 <br> New Cases:  174","Louisiana <br> Cumulative Cases:  28711 <br> New Cases:  710","Maine <br> Cumulative Cases:  1123 <br> New Cases:  28","Maryland <br> Cumulative Cases:  23472 <br> New Cases:  1730","Massachusetts <br> Cumulative Cases:  68953 <br> New Cases:  2086","Michigan <br> Cumulative Cases:  44524 <br> New Cases:  1046","Minnesota <br> Cumulative Cases:  5730 <br> New Cases:  594","Mississippi <br> Cumulative Cases:  7212 <br> New Cases:  397","Missouri <br> Cumulative Cases:  8190 <br> New Cases:  234","Montana <br> Cumulative Cases:  453 <br> New Cases:  0","Nebraska <br> Cumulative Cases:  5008 <br> New Cases:  727","Nevada <br> Cumulative Cases:  5248 <br> New Cases:  195","New Hampshire <br> Cumulative Cases:  2310 <br> New Cases:  164","New Jersey <br> Cumulative Cases:  121190 <br> New Cases:  2538","New Mexico <br> Cumulative Cases:  3513 <br> New Cases:  102","New York <br> Cumulative Cases:  308314 <br> New Cases:  3942","North Carolina <br> Cumulative Cases:  11585 <br> New Cases:  465","North Dakota <br> Cumulative Cases:  1107 <br> New Cases:  40","Northern Mariana Islands <br> Cumulative Cases:  14 <br> New Cases:  0","Ohio <br> Cumulative Cases:  18743 <br> New Cases:  716","Oklahoma <br> Cumulative Cases:  3748 <br> New Cases:  130","Oregon <br> Cumulative Cases:  2579 <br> New Cases:  69","Pennsylvania <br> Cumulative Cases:  49579 <br> New Cases:  1608","Puerto Rico <br> Cumulative Cases:  958 <br> New Cases:  9","Rhode Island <br> Cumulative Cases:  8962 <br> New Cases:  341","South Carolina <br> Cumulative Cases:  6258 <br> New Cases:  163","South Dakota <br> Cumulative Cases:  2525 <br> New Cases:  76","Tennessee <br> Cumulative Cases:  11891 <br> New Cases:  1156","Texas <br> Cumulative Cases:  29692 <br> New Cases:  965","US Total <br> Cumulative Cases:  1110145 <br> New Cases:  34193","Utah <br> Cumulative Cases:  4828 <br> New Cases:  156","Vermont <br> Cumulative Cases:  879 <br> New Cases:  13","Virgin Islands <br> Cumulative Cases:  66 <br> New Cases:  0","Virginia <br> Cumulative Cases:  16902 <br> New Cases:  1055","Washington <br> Cumulative Cases:  14637 <br> New Cases:  310","West Virginia <br> Cumulative Cases:  1152 <br> New Cases:  27","Wisconsin <br> Cumulative Cases:  7314 <br> New Cases:  460","Wyoming <br> Cumulative Cases:  566 <br> New Cases:  7"],"locations":["AL","AK",null,"AZ","AR","CA","CO","CT","DE","DC","FL","GA",null,"HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND",null,"OH","OK","OR","PA",null,"RI","SC","SD","TN","TX",null,"UT","VT",null,"VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0,"cmax":10.4397762237386,"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":false,"color":[5.32787616878958,2.19722457733622,0,5.74939298590825,4.02535169073515,7.54750168281497,6.23244801655052,6.96979066990159,5.21493575760899,5.81413053182507,6.94505106372583,7.11069612297883,0,0,3.43398720448515,8.05102220819068,6.67834211465433,6.6052979209482,5.39816270151775,5.15905529921453,6.56526497003536,3.3322045101752,7.45587668749182,7.64300363556072,6.95272864462487,6.38687931936265,5.98393628068719,5.4553211153577,0,6.58892647753352,5.27299955856375,5.0998664278242,7.83913164827433,4.62497281328427,8.27944348771267,6.14203740558736,3.68887945411394,0,6.57368016696065,4.86753445045558,4.23410650459726,7.38274644973891,2.19722457733622,5.83188247728352,5.09375020080676,4.33073334028633,7.05272104923232,6.87212810133899,10.4397762237386,5.04985600724954,2.56494935746154,0,6.96129604591017,5.73657229747919,3.29583686600433,6.13122648948314,1.94591014905531]}},"geo":"geo","frame":null,"zmin":0,"zmax":10},{"colorbar":{"title":"Log New Cases August 1 2020","ticklen":2,"len":0.25,"lenmode":"fraction","y":0.75,"yanchor":"top"},"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":true,"locationmode":"USA-states","z":[7.39387829010776,5.01063529409626,0,8.00369733909437,6.49526555593701,8.70896990698095,6.12686918411419,0,4.48863636973214,4.36944785246702,9.17388383496557,8.20521842639541,0,4.45434729625351,5.97635090929793,7.40184157874383,6.87523208727658,6.29156913955832,5.42934562895444,6.3491389913798,0,3.2188758248682,6.92657703322272,5.02388052084628,6.63068338564237,6.58617165485467,7.0335064842877,6.92362862813843,4.75359019110636,5.19295685089021,6.89365635460264,3.43398720448515,5.91079664404053,5.27811465923052,6.62406522779989,7.24565506759454,4.89034912822175,0.693147180559945,6.8330317327862,7.12608727329912,5.78382518232974,6.52356230614951,6.30261897574491,0,7.36707705988101,4.63472898822964,7.70751219460034,8.77105991537329,null,6.22653666928747,1.94591014905531,2.70805020110221,6.81673588059497,7.46049030582534,5.06890420222023,6.96790920180188,3.76120011569356],"text":["Alabama <br> Cumulative Cases:  89349 <br> New Cases:  1626","Alaska <br> Cumulative Cases:  3866 <br> New Cases:  150","American Samoa <br> Cumulative Cases:  0 <br> New Cases:  0","Arizona <br> Cumulative Cases:  177002 <br> New Cases:  2992","Arkansas <br> Cumulative Cases:  43173 <br> New Cases:  662","California <br> Cumulative Cases:  506613 <br> New Cases:  6057","Colorado <br> Cumulative Cases:  47267 <br> New Cases:  458","Connecticut <br> Cumulative Cases:  49810 <br> New Cases:  0","Delaware <br> Cumulative Cases:  14877 <br> New Cases:  89","District of Columbia <br> Cumulative Cases:  12205 <br> New Cases:  79","Florida <br> Cumulative Cases:  480028 <br> New Cases:  9642","Georgia <br> Cumulative Cases:  190012 <br> New Cases:  3660","Guam <br> Cumulative Cases:  356 <br> New Cases:  0","Hawaii <br> Cumulative Cases:  2197 <br> New Cases:  86","Idaho <br> Cumulative Cases:  21110 <br> New Cases:  394","Illinois <br> Cumulative Cases:  181754 <br> New Cases:  1639","Indiana <br> Cumulative Cases:  67122 <br> New Cases:  968","Iowa <br> Cumulative Cases:  45293 <br> New Cases:  540","Kansas <br> Cumulative Cases:  27592 <br> New Cases:  228","Kentucky <br> Cumulative Cases:  30723 <br> New Cases:  572","Louisiana <br> Cumulative Cases:  116280 <br> New Cases:  0","Maine <br> Cumulative Cases:  3937 <br> New Cases:  25","Maryland <br> Cumulative Cases:  89365 <br> New Cases:  1019","Massachusetts <br> Cumulative Cases:  111988 <br> New Cases:  152","Michigan <br> Cumulative Cases:  91332 <br> New Cases:  758","Minnesota <br> Cumulative Cases:  55188 <br> New Cases:  725","Mississippi <br> Cumulative Cases:  59881 <br> New Cases:  1134","Missouri <br> Cumulative Cases:  51632 <br> New Cases:  1016","Montana <br> Cumulative Cases:  4081 <br> New Cases:  116","Nebraska <br> Cumulative Cases:  26391 <br> New Cases:  180","Nevada <br> Cumulative Cases:  49074 <br> New Cases:  986","New Hampshire <br> Cumulative Cases:  6614 <br> New Cases:  31","New Jersey <br> Cumulative Cases:  182029 <br> New Cases:  369","New Mexico <br> Cumulative Cases:  20796 <br> New Cases:  196","New York <br> Cumulative Cases:  415767 <br> New Cases:  753","North Carolina <br> Cumulative Cases:  127080 <br> New Cases:  1402","North Dakota <br> Cumulative Cases:  6602 <br> New Cases:  133","Northern Mariana Islands <br> Cumulative Cases:  44 <br> New Cases:  2","Ohio <br> Cumulative Cases:  92087 <br> New Cases:  928","Oklahoma <br> Cumulative Cases:  37731 <br> New Cases:  1244","Oregon <br> Cumulative Cases:  18817 <br> New Cases:  325","Pennsylvania <br> Cumulative Cases:  117468 <br> New Cases:  681","Puerto Rico <br> Cumulative Cases:  6543 <br> New Cases:  546","Rhode Island <br> Cumulative Cases:  19022 <br> New Cases:  0","South Carolina <br> Cumulative Cases:  90599 <br> New Cases:  1583","South Dakota <br> Cumulative Cases:  8867 <br> New Cases:  103","Tennessee <br> Cumulative Cases:  108184 <br> New Cases:  2225","Texas <br> Cumulative Cases:  444738 <br> New Cases:  6445","US Total <br> Cumulative Cases:  4606881 <br> New Cases:  57362","Utah <br> Cumulative Cases:  40702 <br> New Cases:  506","Vermont <br> Cumulative Cases:  1421 <br> New Cases:  7","Virgin Islands <br> Cumulative Cases:  421 <br> New Cases:  15","Virginia <br> Cumulative Cases:  90801 <br> New Cases:  913","Washington <br> Cumulative Cases:  57541 <br> New Cases:  1738","West Virginia <br> Cumulative Cases:  6738 <br> New Cases:  159","Wisconsin <br> Cumulative Cases:  54002 <br> New Cases:  1062","Wyoming <br> Cumulative Cases:  2769 <br> New Cases:  43"],"locations":["AL","AK",null,"AZ","AR","CA","CO","CT","DE","DC","FL","GA",null,"HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND",null,"OH","OK","OR","PA",null,"RI","SC","SD","TN","TX",null,"UT","VT",null,"VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0,"cmax":10.9571373421691,"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":false,"color":[7.39387829010776,5.01063529409626,0,8.00369733909437,6.49526555593701,8.70896990698095,6.12686918411419,0,4.48863636973214,4.36944785246702,9.17388383496557,8.20521842639541,0,4.45434729625351,5.97635090929793,7.40184157874383,6.87523208727658,6.29156913955832,5.42934562895444,6.3491389913798,0,3.2188758248682,6.92657703322272,5.02388052084628,6.63068338564237,6.58617165485467,7.0335064842877,6.92362862813843,4.75359019110636,5.19295685089021,6.89365635460264,3.43398720448515,5.91079664404053,5.27811465923052,6.62406522779989,7.24565506759454,4.89034912822175,0.693147180559945,6.8330317327862,7.12608727329912,5.78382518232974,6.52356230614951,6.30261897574491,0,7.36707705988101,4.63472898822964,7.70751219460034,8.77105991537329,10.9571373421691,6.22653666928747,1.94591014905531,2.70805020110221,6.81673588059497,7.46049030582534,5.06890420222023,6.96790920180188,3.76120011569356]}},"geo":"geo2","frame":null,"zmin":0,"zmax":10},{"colorbar":{"title":"Log New Cases Today","ticklen":2,"len":0.25,"lenmode":"fraction","y":0.5,"yanchor":"top"},"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":true,"locationmode":"USA-states","z":[7.63530388625941,6.21260609575152,0,7.61579107203583,7.58171964012531,8.72306850116393,8.28778002708843,7.48885295573346,5.4380793089232,5.32787616878958,8.67214355141406,7.71512360363211,0,4.76217393479776,7.43425738213314,9.44596570079245,8.52436739516424,8.43944784279138,8.57810012631976,7.9002660367677,0,6.95081476844258,7.44658509915773,7.88608140177575,8.79785064893105,8.49474306257865,7.13568734702814,8.27995071572253,6.82328612235569,7.70029520342012,7.00940893270864,5.4510384535657,8.02780284837031,7.30451594646016,8.48052920704465,8.0452677166078,6.92853781816467,0,8.67829111175856,7.68570306123455,6.75809450442773,8.28626945278307,5.57594910314632,6.88550967003482,7.13648320859025,7.21670948670946,8.19753873972118,9.39032586897259,null,7.755767170103,4.29045944114839,0,7.37400185935016,0,6.78558764500793,8.92757950384347,4.88280192258637],"text":["Alabama <br> Cumulative Cases:  89349 <br> New Cases:  1626","Alaska <br> Cumulative Cases:  3866 <br> New Cases:  150","American Samoa <br> Cumulative Cases:  0 <br> New Cases:  0","Arizona <br> Cumulative Cases:  177002 <br> New Cases:  2992","Arkansas <br> Cumulative Cases:  43173 <br> New Cases:  662","California <br> Cumulative Cases:  506613 <br> New Cases:  6057","Colorado <br> Cumulative Cases:  47267 <br> New Cases:  458","Connecticut <br> Cumulative Cases:  49810 <br> New Cases:  0","Delaware <br> Cumulative Cases:  14877 <br> New Cases:  89","District of Columbia <br> Cumulative Cases:  12205 <br> New Cases:  79","Florida <br> Cumulative Cases:  480028 <br> New Cases:  9642","Georgia <br> Cumulative Cases:  190012 <br> New Cases:  3660","Guam <br> Cumulative Cases:  356 <br> New Cases:  0","Hawaii <br> Cumulative Cases:  2197 <br> New Cases:  86","Idaho <br> Cumulative Cases:  21110 <br> New Cases:  394","Illinois <br> Cumulative Cases:  181754 <br> New Cases:  1639","Indiana <br> Cumulative Cases:  67122 <br> New Cases:  968","Iowa <br> Cumulative Cases:  45293 <br> New Cases:  540","Kansas <br> Cumulative Cases:  27592 <br> New Cases:  228","Kentucky <br> Cumulative Cases:  30723 <br> New Cases:  572","Louisiana <br> Cumulative Cases:  116280 <br> New Cases:  0","Maine <br> Cumulative Cases:  3937 <br> New Cases:  25","Maryland <br> Cumulative Cases:  89365 <br> New Cases:  1019","Massachusetts <br> Cumulative Cases:  111988 <br> New Cases:  152","Michigan <br> Cumulative Cases:  91332 <br> New Cases:  758","Minnesota <br> Cumulative Cases:  55188 <br> New Cases:  725","Mississippi <br> Cumulative Cases:  59881 <br> New Cases:  1134","Missouri <br> Cumulative Cases:  51632 <br> New Cases:  1016","Montana <br> Cumulative Cases:  4081 <br> New Cases:  116","Nebraska <br> Cumulative Cases:  26391 <br> New Cases:  180","Nevada <br> Cumulative Cases:  49074 <br> New Cases:  986","New Hampshire <br> Cumulative Cases:  6614 <br> New Cases:  31","New Jersey <br> Cumulative Cases:  182029 <br> New Cases:  369","New Mexico <br> Cumulative Cases:  20796 <br> New Cases:  196","New York <br> Cumulative Cases:  415767 <br> New Cases:  753","North Carolina <br> Cumulative Cases:  127080 <br> New Cases:  1402","North Dakota <br> Cumulative Cases:  6602 <br> New Cases:  133","Northern Mariana Islands <br> Cumulative Cases:  44 <br> New Cases:  2","Ohio <br> Cumulative Cases:  92087 <br> New Cases:  928","Oklahoma <br> Cumulative Cases:  37731 <br> New Cases:  1244","Oregon <br> Cumulative Cases:  18817 <br> New Cases:  325","Pennsylvania <br> Cumulative Cases:  117468 <br> New Cases:  681","Puerto Rico <br> Cumulative Cases:  6543 <br> New Cases:  546","Rhode Island <br> Cumulative Cases:  19022 <br> New Cases:  0","South Carolina <br> Cumulative Cases:  90599 <br> New Cases:  1583","South Dakota <br> Cumulative Cases:  8867 <br> New Cases:  103","Tennessee <br> Cumulative Cases:  108184 <br> New Cases:  2225","Texas <br> Cumulative Cases:  444738 <br> New Cases:  6445","US Total <br> Cumulative Cases:  4606881 <br> New Cases:  57362","Utah <br> Cumulative Cases:  40702 <br> New Cases:  506","Vermont <br> Cumulative Cases:  1421 <br> New Cases:  7","Virgin Islands <br> Cumulative Cases:  421 <br> New Cases:  15","Virginia <br> Cumulative Cases:  90801 <br> New Cases:  913","Washington <br> Cumulative Cases:  57541 <br> New Cases:  1738","West Virginia <br> Cumulative Cases:  6738 <br> New Cases:  159","Wisconsin <br> Cumulative Cases:  54002 <br> New Cases:  1062","Wyoming <br> Cumulative Cases:  2769 <br> New Cases:  43"],"locations":["AL","AK",null,"AZ","AR","CA","CO","CT","DE","DC","FL","GA",null,"HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND",null,"OH","OK","OR","PA",null,"RI","SC","SD","TN","TX",null,"UT","VT",null,"VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0,"cmax":11.878491763403,"colorscale":[["0","rgba(255,245,240,1)"],["0.0416666666666667","rgba(255,238,230,1)"],["0.0833333333333333","rgba(255,231,220,1)"],["0.125","rgba(254,224,210,1)"],["0.166666666666667","rgba(254,212,193,1)"],["0.208333333333333","rgba(253,199,177,1)"],["0.25","rgba(252,187,161,1)"],["0.291666666666667","rgba(253,174,145,1)"],["0.333333333333333","rgba(253,160,129,1)"],["0.375","rgba(252,146,114,1)"],["0.416666666666667","rgba(252,133,101,1)"],["0.458333333333333","rgba(252,120,87,1)"],["0.5","rgba(251,106,74,1)"],["0.541666666666667","rgba(247,92,64,1)"],["0.583333333333333","rgba(243,77,54,1)"],["0.625","rgba(239,59,44,1)"],["0.666666666666667","rgba(227,49,39,1)"],["0.708333333333333","rgba(215,37,34,1)"],["0.75","rgba(203,24,29,1)"],["0.791666666666667","rgba(190,21,26,1)"],["0.833333333333333","rgba(178,18,24,1)"],["0.875","rgba(165,15,21,1)"],["0.916666666666667","rgba(144,9,19,1)"],["0.958333333333333","rgba(123,3,16,1)"],["1","rgba(103,0,13,1)"]],"showscale":false,"color":[7.63530388625941,6.21260609575152,0,7.61579107203583,7.58171964012531,8.72306850116393,8.28778002708843,7.48885295573346,5.4380793089232,5.32787616878958,8.67214355141406,7.71512360363211,0,4.76217393479776,7.43425738213314,9.44596570079245,8.52436739516424,8.43944784279138,8.57810012631976,7.9002660367677,0,6.95081476844258,7.44658509915773,7.88608140177575,8.79785064893105,8.49474306257865,7.13568734702814,8.27995071572253,6.82328612235569,7.70029520342012,7.00940893270864,5.4510384535657,8.02780284837031,7.30451594646016,8.48052920704465,8.0452677166078,6.92853781816467,0,8.67829111175856,7.68570306123455,6.75809450442773,8.28626945278307,5.57594910314632,6.88550967003482,7.13648320859025,7.21670948670946,8.19753873972118,9.39032586897259,11.878491763403,7.755767170103,4.29045944114839,0,7.37400185935016,0,6.78558764500793,8.92757950384347,4.88280192258637]}},"geo":"geo3","frame":null,"zmin":0,"zmax":10}],"layout":{"geo":{"domain":{"x":[0,0.313333333333333],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"geo2":{"domain":{"x":[0.353333333333333,0.646666666666667],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"geo3":{"domain":{"x":[0.686666666666667,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"log_new"}},"hovermode":"closest","showlegend":true,"legend":{"yanchor":"top","y":0.25},"title":"Log of New Cases by State <br> (Hover for value)"},"attrs":{"3be42b2672f1":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"Reds","inherit":true},"3be453f23d1a":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"Reds","inherit":true}},"source":"A","config":{"showSendToCloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="figure-2" class="section level3">
+<h3>Figure 2</h3>
+<div id="htmlwidget-a62e8805dde996f292b2" style="width:700px;height:415.296px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a62e8805dde996f292b2">{"x":{"visdat":{"3be460bf59c5":["function () ","plotlyVisDat"]},"cur_data":"3be460bf59c5","attrs":{"3be460bf59c5":{"x":{},"y":{},"mode":"lines","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"date"},"yaxis":{"domain":[0,1],"automargin":true,"title":"log_new"},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["2020-01-23","2020-01-24","2020-01-25","2020-01-26","2020-01-27","2020-01-28","2020-01-29","2020-01-30","2020-01-31","2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05","2020-02-06","2020-02-07","2020-02-08","2020-02-09","2020-02-10","2020-02-11","2020-02-12","2020-02-13","2020-02-14","2020-02-15","2020-02-16","2020-02-17","2020-02-18","2020-02-19","2020-02-20","2020-02-21","2020-02-22","2020-02-23","2020-02-24","2020-02-25","2020-02-26","2020-02-27","2020-02-28","2020-02-29","2020-03-01","2020-03-02","2020-03-03","2020-03-04","2020-03-05","2020-03-06","2020-03-07","2020-03-08","2020-03-09","2020-03-10","2020-03-11","2020-03-12","2020-03-13","2020-03-14","2020-03-15","2020-03-16","2020-03-17","2020-03-18","2020-03-19","2020-03-20","2020-03-21","2020-03-22","2020-03-23","2020-03-24","2020-03-25","2020-03-26","2020-03-27","2020-03-28","2020-03-29","2020-03-30","2020-03-31","2020-04-01","2020-04-02","2020-04-03","2020-04-04","2020-04-05","2020-04-06","2020-04-07","2020-04-08","2020-04-09","2020-04-10","2020-04-11","2020-04-12","2020-04-13","2020-04-14","2020-04-15","2020-04-16","2020-04-17","2020-04-18","2020-04-19","2020-04-20","2020-04-21","2020-04-22","2020-04-23","2020-04-24","2020-04-25","2020-04-26","2020-04-27","2020-04-28","2020-04-29","2020-04-30","2020-05-01","2020-05-02","2020-05-03","2020-05-04","2020-05-05","2020-05-06","2020-05-07","2020-05-08","2020-05-09","2020-05-10","2020-05-11","2020-05-12","2020-05-13","2020-05-14","2020-05-15","2020-05-16","2020-05-17","2020-05-18","2020-05-19","2020-05-20","2020-05-21","2020-05-22","2020-05-23","2020-05-24","2020-05-25","2020-05-26","2020-05-27","2020-05-28","2020-05-29","2020-05-30","2020-05-31","2020-06-01","2020-06-02","2020-06-03","2020-06-04","2020-06-05","2020-06-06","2020-06-07","2020-06-08","2020-06-09","2020-06-10","2020-06-11","2020-06-12","2020-06-13","2020-06-14","2020-06-15","2020-06-16","2020-06-17","2020-06-18","2020-06-19","2020-06-20","2020-06-21","2020-06-22","2020-06-23","2020-06-24","2020-06-25","2020-06-26","2020-06-27","2020-06-28","2020-06-29","2020-06-30","2020-07-01","2020-07-02","2020-07-03","2020-07-04","2020-07-05","2020-07-06","2020-07-07","2020-07-08","2020-07-09","2020-07-10","2020-07-11","2020-07-12","2020-07-13","2020-07-14","2020-07-15","2020-07-16","2020-07-17","2020-07-18","2020-07-19","2020-07-20","2020-07-21","2020-07-22","2020-07-23","2020-07-24","2020-07-25","2020-07-26","2020-07-27","2020-07-28","2020-07-29","2020-07-30","2020-07-31","2020-08-01","2020-08-02","2020-08-03","2020-08-04","2020-08-05","2020-08-06","2020-08-07","2020-08-08","2020-08-09","2020-08-10","2020-08-11","2020-08-12","2020-08-13","2020-08-14","2020-08-15","2020-08-16","2020-08-17","2020-08-18","2020-08-19","2020-08-20","2020-08-21","2020-08-22","2020-08-23","2020-08-24","2020-08-25","2020-08-26","2020-08-27","2020-08-28","2020-08-29","2020-08-30","2020-08-31","2020-09-01","2020-09-02","2020-09-03","2020-09-04","2020-09-05","2020-09-06","2020-09-07","2020-09-08","2020-09-09","2020-09-10","2020-09-11","2020-09-12","2020-09-13","2020-09-14","2020-09-15","2020-09-16","2020-09-17","2020-09-18","2020-09-19","2020-09-20","2020-09-21","2020-09-22","2020-09-23","2020-09-24","2020-09-25","2020-09-26","2020-09-27","2020-09-28","2020-09-29","2020-09-30","2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06","2020-10-07","2020-10-08","2020-10-09","2020-10-10","2020-10-11","2020-10-12","2020-10-13","2020-10-14","2020-10-15","2020-10-16","2020-10-17","2020-10-18","2020-10-19","2020-10-20","2020-10-21","2020-10-22","2020-10-23","2020-10-24","2020-10-25","2020-10-26","2020-10-27","2020-10-28","2020-10-29","2020-10-30","2020-10-31","2020-11-01","2020-11-02","2020-11-03","2020-11-04","2020-11-05","2020-11-06","2020-11-07","2020-11-08","2020-11-09","2020-11-10","2020-11-11"],"y":[0,0,0,0.693147180559945,0,0,0,0,0,0,0,1.09861228866811,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.693147180559945,0,0,0,0,0,0,0,0,0,2.19722457733622,1.38629436111989,2.30258509299405,2.77258872223978,2.07944154167984,3.09104245335832,2.63905732961526,1.79175946922805,3.76120011569356,3.52636052461616,3.76120011569356,4.0943445622221,4.51085950651685,0,5.21493575760899,4.96284463025991,4.87519732320115,5.18178355029209,5.4553211153577,5.12989871492307,5.47646355193151,6.13556489108174,6.06145691892802,6.1463292576689,6.80350525760834,6.64509096950564,6.06610809010375,6.62406522779989,7.16394668434255,6.98286275146894,7.07072410726028,7.22983877815125,7.11151211649616,6.71052310945243,7.69484807238461,6.89770494312864,7.19067603433221,7.34342622914737,6.70073110954781,7.22329567956231,6.45519856334012,6.98749024700099,7.0335064842877,7.28276117960559,7.16780918431644,6.89871453432999,7.29979736675816,7.21081845347222,6.82437367004309,7.72090525193678,7.49220304261874,7.53476265703754,7.70029520342012,7.49220304261874,6.92067150424868,7.0825485693553,7.25347038268453,7.0833878476253,7.85670679309584,7.23201033166476,7.54750168281497,7.18614430452233,7.34987370473834,6.88857245956536,7.85243908535751,7.67786350067821,7.33432935030054,7.40974195408092,7.92732436030979,6.93537044601511,7.45529848568329,7.40913644392013,7.50549227473742,7.63675211243578,7.5076900778199,7.61677580869837,7.27309259599952,7.20934025660291,7.71690613529839,7.72046169459972,7.61972421378267,7.70751219460034,7.7332456465298,7.31654817718298,7.78364059622125,8.01367414283268,7.36454701425564,7.91644286012226,7.94626364358054,8.08856180527623,7.62851762657506,7.93092537248339,7.81681996576455,7.67740043051481,7.94449216393216,8.18562889114761,7.94555542825349,7.62608275807238,8.05801080080209,7.96032362914884,8.01763715990848,8.22255363839696,8.07713663853845,8.12415060330663,7.74716496652033,8.12474302038557,8.081784206935,8.25244609024695,8.37447688921464,8.22389538017882,8.3850322878139,8.13563990335439,8.71735466633852,8.81165224814704,8.42222295382501,8.53464010501996,8.65381978894806,8.2553088117856,8.47532898731754,9.0068768914288,8.95828281049733,8.89054824560617,8.97068626853498,8.28500889544988,7.77527584648686,9.37466766539786,8.75683981482946,9.47093383873723,9.05345261643904,9.20271134481169,9.03610602536485,8.97157543975902,8.66250492257629,9.08409664540193,9.46141032593123,9.06808532439531,9.19227822915777,9.05403737758078,8.92078988846438,8.72599438101457,9.30237245742268,9.34443410645688,9.3910773406399,9.15767771939288,9.14974074984725,8.74305305022468,8.67180090964268,8.67128672675364,9.44470077849556,9.55754057195237,8.98981838136693,8.93879408143381,8.70896990698095,8.62371303479391,8.45019832259196,9.19360104797189,8.27410200229233,9.28107838648152,8.6079475546847,8.93247660846174,8.58634605010455,9.58086891020345,8.45850419506756,9.42786818450476,8.79603631520081,9.62357521734871,8.49556089128912,8.67914195840225,8.62011072542292,9.07394774707063,9.11975899374495,8.51579221050061,8.79981246952556,8.61884684514274,8.48570252432487,8.74528448245438,8.60721669406383,8.69483715865908,8.47990660663022,8.62407255304333,8.44526745184465,8.27205962221041,8.78324296374091,8.05261481881557,8.64188563537355,8.46315930292375,8.44333134281778,8.44505251363855,8.17244681834278,7.65396918047877,8.12533508671429,7.98820359702258,8.20821938349683,8.27995071572253,8.30102525383845,7.9355873855892,8.13329386122263,8.02943284058124,8.04462627976734,8.22040309993373,8.40155784781731,8.24852912480022,7.95682712209011,8.27588566947436,7.99598047476376,8.12296471523406,8.03268487596762,8.32941678393932,8.24038511551633,7.79934339821592,7.944846711002,7.98718474823347,8.14931284363534,8.03592636989179,8.24485939591126,8.16280135349207,8.0684029585697,7.93522953981691,7.8991534833431,8.22309055116153,8.11432470915534,8.24433404785609,8.11192806331074,7.93020620668468,7.90948949267376,8.13064796816058,8.26719218593215,7.98752447984877,8.04076899436758,7.76684053708551,7.63916117165917,8.28223006329669,8.31898612539206,8.06871619271478,8.76795190976342,8.60061479955531,8.49392456447688,7.97659540931658,8.2537483433285,8.40065937516029,8.38662882139512,8.38297584929643,8.38480400337049,8.32239411311117,8.22550309756692,8.41913925094085,8.51519118874556,8.6159519634395,8.68845380085077,8.75731184693641,8.72436994920837,8.11701408773731,9.05765528431053,9.00393101965314,8.72306850116393],"mode":"lines","type":"scatter","name":"California","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2020-01-23","2020-01-24","2020-01-25","2020-01-26","2020-01-27","2020-01-28","2020-01-29","2020-01-30","2020-01-31","2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05","2020-02-06","2020-02-07","2020-02-08","2020-02-09","2020-02-10","2020-02-11","2020-02-12","2020-02-13","2020-02-14","2020-02-15","2020-02-16","2020-02-17","2020-02-18","2020-02-19","2020-02-20","2020-02-21","2020-02-22","2020-02-23","2020-02-24","2020-02-25","2020-02-26","2020-02-27","2020-02-28","2020-02-29","2020-03-01","2020-03-02","2020-03-03","2020-03-04","2020-03-05","2020-03-06","2020-03-07","2020-03-08","2020-03-09","2020-03-10","2020-03-11","2020-03-12","2020-03-13","2020-03-14","2020-03-15","2020-03-16","2020-03-17","2020-03-18","2020-03-19","2020-03-20","2020-03-21","2020-03-22","2020-03-23","2020-03-24","2020-03-25","2020-03-26","2020-03-27","2020-03-28","2020-03-29","2020-03-30","2020-03-31","2020-04-01","2020-04-02","2020-04-03","2020-04-04","2020-04-05","2020-04-06","2020-04-07","2020-04-08","2020-04-09","2020-04-10","2020-04-11","2020-04-12","2020-04-13","2020-04-14","2020-04-15","2020-04-16","2020-04-17","2020-04-18","2020-04-19","2020-04-20","2020-04-21","2020-04-22","2020-04-23","2020-04-24","2020-04-25","2020-04-26","2020-04-27","2020-04-28","2020-04-29","2020-04-30","2020-05-01","2020-05-02","2020-05-03","2020-05-04","2020-05-05","2020-05-06","2020-05-07","2020-05-08","2020-05-09","2020-05-10","2020-05-11","2020-05-12","2020-05-13","2020-05-14","2020-05-15","2020-05-16","2020-05-17","2020-05-18","2020-05-19","2020-05-20","2020-05-21","2020-05-22","2020-05-23","2020-05-24","2020-05-25","2020-05-26","2020-05-27","2020-05-28","2020-05-29","2020-05-30","2020-05-31","2020-06-01","2020-06-02","2020-06-03","2020-06-04","2020-06-05","2020-06-06","2020-06-07","2020-06-08","2020-06-09","2020-06-10","2020-06-11","2020-06-12","2020-06-13","2020-06-14","2020-06-15","2020-06-16","2020-06-17","2020-06-18","2020-06-19","2020-06-20","2020-06-21","2020-06-22","2020-06-23","2020-06-24","2020-06-25","2020-06-26","2020-06-27","2020-06-28","2020-06-29","2020-06-30","2020-07-01","2020-07-02","2020-07-03","2020-07-04","2020-07-05","2020-07-06","2020-07-07","2020-07-08","2020-07-09","2020-07-10","2020-07-11","2020-07-12","2020-07-13","2020-07-14","2020-07-15","2020-07-16","2020-07-17","2020-07-18","2020-07-19","2020-07-20","2020-07-21","2020-07-22","2020-07-23","2020-07-24","2020-07-25","2020-07-26","2020-07-27","2020-07-28","2020-07-29","2020-07-30","2020-07-31","2020-08-01","2020-08-02","2020-08-03","2020-08-04","2020-08-05","2020-08-06","2020-08-07","2020-08-08","2020-08-09","2020-08-10","2020-08-11","2020-08-12","2020-08-13","2020-08-14","2020-08-15","2020-08-16","2020-08-17","2020-08-18","2020-08-19","2020-08-20","2020-08-21","2020-08-22","2020-08-23","2020-08-24","2020-08-25","2020-08-26","2020-08-27","2020-08-28","2020-08-29","2020-08-30","2020-08-31","2020-09-01","2020-09-02","2020-09-03","2020-09-04","2020-09-05","2020-09-06","2020-09-07","2020-09-08","2020-09-09","2020-09-10","2020-09-11","2020-09-12","2020-09-13","2020-09-14","2020-09-15","2020-09-16","2020-09-17","2020-09-18","2020-09-19","2020-09-20","2020-09-21","2020-09-22","2020-09-23","2020-09-24","2020-09-25","2020-09-26","2020-09-27","2020-09-28","2020-09-29","2020-09-30","2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06","2020-10-07","2020-10-08","2020-10-09","2020-10-10","2020-10-11","2020-10-12","2020-10-13","2020-10-14","2020-10-15","2020-10-16","2020-10-17","2020-10-18","2020-10-19","2020-10-20","2020-10-21","2020-10-22","2020-10-23","2020-10-24","2020-10-25","2020-10-26","2020-10-27","2020-10-28","2020-10-29","2020-10-30","2020-10-31","2020-11-01","2020-11-02","2020-11-03","2020-11-04","2020-11-05","2020-11-06","2020-11-07","2020-11-08","2020-11-09","2020-11-10","2020-11-11"],"y":[0,0,0,1.09861228866811,0,0,0,0,0.693147180559945,0,0,1.09861228866811,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.693147180559945,0,0,0,0,0,0,0,2.07944154167984,1.94591014905531,3.13549421592915,2.94443897916644,3.49650756146648,4.34380542185368,3.97029191355212,5.11198778835654,4.75359019110636,4.31748811353631,5.23644196282995,5.89989735358249,6.08449941307517,6.45047042214418,6.63200177739563,5.4553211153577,7.27724772663148,7.48717369421374,7.88495294575981,8.41027590907016,8.75841238945768,8.69868106746161,9.0825070004663,9.32563141631092,9.26643711132805,9.3954912557803,9.79216485389186,9.83306508823958,9.87929731373491,9.84855606900991,9.99920673959467,10.1799064327092,10.1588659339837,10.3218359798084,10.3733974273871,10.4042022325514,10.2465452005157,10.3151335197194,10.3544994756003,10.3739910568235,10.4530241441727,10.4203747676807,10.2873203605172,10.2020724723502,10.1577808728426,10.2608472619694,10.3092192917617,10.3584727171077,10.3983667044724,10.2346241513535,10.1535066978557,10.2549187721518,10.1673122884573,10.2852404006845,10.4116596588366,10.4267949538042,10.3535116638415,10.2054053150146,10.0501387528618,10.1131810561259,10.2334385721671,10.2904152326458,10.4397762237386,10.2338339214274,10.1050396776069,10.0596362350261,10.1058568046339,10.1307426398901,10.2304504324893,10.1951491959807,10.124909622952,9.84357829978222,9.87328604380301,10.031044885951,9.94936872779232,10.2118542161807,10.1343611499122,10.0856841015169,9.80339093599784,9.99875227676191,9.94984619151415,10.0624978339207,10.1513237164407,10.0574525008306,9.95873302676211,9.90473677193656,9.81307038241166,9.87627050624257,9.82741611558483,10.0380184454937,10.0942731877422,10.0766001702448,9.85822864613051,9.75689986769328,9.96707249416124,9.89837450314931,9.9647237520067,10.1292277296976,9.9791978117706,9.78250565597535,9.76858379007133,9.81170115690542,9.93779235622812,10.0512607968256,10.1161362247577,10.1317380412185,9.86614906688076,9.89606003670733,10.0748324186165,10.1606073194053,10.2433113093909,10.3495826367302,10.3741159865507,10.1677346587288,10.3240382980623,10.4825137339914,10.4443864093083,10.6090819441478,10.7206648815129,10.6509571849501,10.577808628846,10.6125572936399,10.7367009769929,10.8452120856671,10.9166871855783,10.8687779504422,10.729196906179,10.8174355423318,10.6966158054594,11.0039148597278,10.9882544343822,11.0544550715382,11.1207565691544,11.0024497799685,10.9812336485229,10.9912579463593,11.1118059012923,11.1200458265466,11.2549186928282,11.1792413379567,11.044824025414,11.0188258451198,11.0321277890432,11.0699142407881,11.1746516064024,11.1403969431083,11.1960617191549,11.0997859840504,10.9048544567654,10.941730395161,11.0910412988338,11.1735429977329,11.1203124142259,11.1127612820991,10.9571373421691,10.7597309959049,10.708734985617,10.9550606431985,10.8893230036013,10.9938660362771,10.9682155307592,10.9206185993364,10.7317991665832,10.8087375592933,10.7497420116266,10.9491209164134,10.8538318245351,11.0723252860937,10.7621279849085,10.6282545168515,10.4817007600038,10.7157058277371,10.7621491715736,10.6919221853694,10.7780809068541,10.6908534083351,10.443046395125,10.5342272729675,10.5505907945947,10.7317773270384,10.729875458481,10.7334139707573,10.7304223428942,10.4718365235458,10.4461024987915,10.6553752281187,10.6101430831209,10.6882563001433,10.8218162064358,10.6916039456868,10.3460236288534,10.070906955078,10.1925686459016,10.4224003864847,10.4925511795528,10.7678953425306,10.6160696457347,10.4510307592373,10.4279793670659,10.5715476677194,10.5609298322253,10.7041204888305,10.7874823396095,10.6795502334234,10.5415975971662,10.8485406530779,10.5868873816412,10.5477333127379,10.7004765961846,10.8102530631852,10.7019852487039,10.5276597185925,10.3768293538804,10.6480642682024,10.6238363905212,10.7222536545202,10.8867264001417,10.8099905403392,10.5002064284231,10.5620950468213,10.6566003142635,10.8378539311375,10.9540469052153,10.9371345623519,10.8996979075862,10.734046088919,10.6105869467141,10.8784433404724,10.984105577832,11.0700855389953,11.1311085217678,10.9520864291721,10.8064701223465,11.1062045686901,11.0176286428219,11.0450635406364,11.1935187799353,11.3210746486601,11.3370947967066,11.0340344597346,11.0973342605631,11.2331189652881,11.2677663395983,11.4098179649211,11.490638955391,11.3945585088655,11.244470690946,11.3130100397752,11.7203948152968,11.5419598578886,11.7416533945783,11.7353327453035,11.7634351250676,11.6062336421039,11.6947802461747,11.8514669877128,11.878491763403],"mode":"lines","type":"scatter","name":"US Total","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="figure-3" class="section level3">
+<h3>Figure 3</h3>
+<div id="htmlwidget-429aa997bdd169934893" style="width:700px;height:415.296px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-429aa997bdd169934893">{"x":{"visdat":{"3be42086266c":["function () ","plotlyVisDat"]},"cur_data":"3be42086266c","attrs":{"3be42086266c":{"x":{},"y":{},"mode":"lines","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"date"},"yaxis":{"domain":[0,1],"automargin":true,"title":"case"},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["2020-01-23","2020-01-24","2020-01-25","2020-01-26","2020-01-27","2020-01-28","2020-01-29","2020-01-30","2020-01-31","2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05","2020-02-06","2020-02-07","2020-02-08","2020-02-09","2020-02-10","2020-02-11","2020-02-12","2020-02-13","2020-02-14","2020-02-15","2020-02-16","2020-02-17","2020-02-18","2020-02-19","2020-02-20","2020-02-21","2020-02-22","2020-02-23","2020-02-24","2020-02-25","2020-02-26","2020-02-27","2020-02-28","2020-02-29","2020-03-01","2020-03-02","2020-03-03","2020-03-04","2020-03-05","2020-03-06","2020-03-07","2020-03-08","2020-03-09","2020-03-10","2020-03-11","2020-03-12","2020-03-13","2020-03-14","2020-03-15","2020-03-16","2020-03-17","2020-03-18","2020-03-19","2020-03-20","2020-03-21","2020-03-22","2020-03-23","2020-03-24","2020-03-25","2020-03-26","2020-03-27","2020-03-28","2020-03-29","2020-03-30","2020-03-31","2020-04-01","2020-04-02","2020-04-03","2020-04-04","2020-04-05","2020-04-06","2020-04-07","2020-04-08","2020-04-09","2020-04-10","2020-04-11","2020-04-12","2020-04-13","2020-04-14","2020-04-15","2020-04-16","2020-04-17","2020-04-18","2020-04-19","2020-04-20","2020-04-21","2020-04-22","2020-04-23","2020-04-24","2020-04-25","2020-04-26","2020-04-27","2020-04-28","2020-04-29","2020-04-30","2020-05-01","2020-05-02","2020-05-03","2020-05-04","2020-05-05","2020-05-06","2020-05-07","2020-05-08","2020-05-09","2020-05-10","2020-05-11","2020-05-12","2020-05-13","2020-05-14","2020-05-15","2020-05-16","2020-05-17","2020-05-18","2020-05-19","2020-05-20","2020-05-21","2020-05-22","2020-05-23","2020-05-24","2020-05-25","2020-05-26","2020-05-27","2020-05-28","2020-05-29","2020-05-30","2020-05-31","2020-06-01","2020-06-02","2020-06-03","2020-06-04","2020-06-05","2020-06-06","2020-06-07","2020-06-08","2020-06-09","2020-06-10","2020-06-11","2020-06-12","2020-06-13","2020-06-14","2020-06-15","2020-06-16","2020-06-17","2020-06-18","2020-06-19","2020-06-20","2020-06-21","2020-06-22","2020-06-23","2020-06-24","2020-06-25","2020-06-26","2020-06-27","2020-06-28","2020-06-29","2020-06-30","2020-07-01","2020-07-02","2020-07-03","2020-07-04","2020-07-05","2020-07-06","2020-07-07","2020-07-08","2020-07-09","2020-07-10","2020-07-11","2020-07-12","2020-07-13","2020-07-14","2020-07-15","2020-07-16","2020-07-17","2020-07-18","2020-07-19","2020-07-20","2020-07-21","2020-07-22","2020-07-23","2020-07-24","2020-07-25","2020-07-26","2020-07-27","2020-07-28","2020-07-29","2020-07-30","2020-07-31","2020-08-01","2020-08-02","2020-08-03","2020-08-04","2020-08-05","2020-08-06","2020-08-07","2020-08-08","2020-08-09","2020-08-10","2020-08-11","2020-08-12","2020-08-13","2020-08-14","2020-08-15","2020-08-16","2020-08-17","2020-08-18","2020-08-19","2020-08-20","2020-08-21","2020-08-22","2020-08-23","2020-08-24","2020-08-25","2020-08-26","2020-08-27","2020-08-28","2020-08-29","2020-08-30","2020-08-31","2020-09-01","2020-09-02","2020-09-03","2020-09-04","2020-09-05","2020-09-06","2020-09-07","2020-09-08","2020-09-09","2020-09-10","2020-09-11","2020-09-12","2020-09-13","2020-09-14","2020-09-15","2020-09-16","2020-09-17","2020-09-18","2020-09-19","2020-09-20","2020-09-21","2020-09-22","2020-09-23","2020-09-24","2020-09-25","2020-09-26","2020-09-27","2020-09-28","2020-09-29","2020-09-30","2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06","2020-10-07","2020-10-08","2020-10-09","2020-10-10","2020-10-11","2020-10-12","2020-10-13","2020-10-14","2020-10-15","2020-10-16","2020-10-17","2020-10-18","2020-10-19","2020-10-20","2020-10-21","2020-10-22","2020-10-23","2020-10-24","2020-10-25","2020-10-26","2020-10-27","2020-10-28","2020-10-29","2020-10-30","2020-10-31","2020-11-01","2020-11-02","2020-11-03","2020-11-04","2020-11-05","2020-11-06","2020-11-07","2020-11-08","2020-11-09","2020-11-10","2020-11-11"],"y":[0,0,0,2,2,2,2,2,3,3,3,6,6,6,6,6,6,6,6,7,7,8,8,8,8,8,8,8,8,10,10,10,10,10,10,11,11,12,12,21,25,35,51,59,81,95,101,144,178,221,281,372,373,557,700,831,1009,1243,1412,1651,2113,2542,3009,3910,4679,5110,5863,7155,8233,9410,10790,12016,12837,15034,16024,17351,18897,19710,21081,21717,22800,23934,25389,26686,27677,29157,30511,31431,33686,35480,37352,39561,41355,42368,43559,44972,46164,48747,50130,52026,53347,54903,55884,58456,60616,62148,63800,66572,67600,69329,70980,72798,74871,76693,78725,80166,81518,83764,86018,88056,90281,92564,94069,96470,99492,101071,103813,106638,109895,111951,114733,117215,119374,122194,125783,128606,130657,133816,136681,139715,143439,146659,150034,152349,155726,158961,162798,167133,170862,175243,178657,184765,191477,196024,201112,206844,210692,215487,223646,231418,238681,246550,250514,252895,264681,271035,284012,292560,302484,310885,318761,324543,333357,346211,354885,364706,373259,380745,386906,397870,409305,421286,430773,440185,446452,452288,458121,470762,484913,492934,500556,506613,512175,516851,526685,530606,541339,546814,554388,559746,574231,578946,591376,597984,613101,617994,623873,629415,638140,647274,652267,658900,664435,669280,675561,681032,687004,691821,697385,702038,705951,712475,715617,721281,726018,730662,735314,738856,740965,744344,747290,750961,754905,758933,761728,765134,768204,771321,775037,779491,783313,786168,790096,793065,796436,799516,803660,807451,809890,812711,815654,819115,822205,826013,829521,832713,835507,838202,841928,845270,849076,852410,855190,857913,861310,865204,868148,871253,873614,875692,879645,883746,886939,893364,898799,903684,906596,910438,914888,919276,923648,928028,932143,935878,940411,945401,950920,956854,963211,969362,972713,981297,989432,995575],"mode":"lines","type":"scatter","name":"California","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2020-01-23","2020-01-24","2020-01-25","2020-01-26","2020-01-27","2020-01-28","2020-01-29","2020-01-30","2020-01-31","2020-02-01","2020-02-02","2020-02-03","2020-02-04","2020-02-05","2020-02-06","2020-02-07","2020-02-08","2020-02-09","2020-02-10","2020-02-11","2020-02-12","2020-02-13","2020-02-14","2020-02-15","2020-02-16","2020-02-17","2020-02-18","2020-02-19","2020-02-20","2020-02-21","2020-02-22","2020-02-23","2020-02-24","2020-02-25","2020-02-26","2020-02-27","2020-02-28","2020-02-29","2020-03-01","2020-03-02","2020-03-03","2020-03-04","2020-03-05","2020-03-06","2020-03-07","2020-03-08","2020-03-09","2020-03-10","2020-03-11","2020-03-12","2020-03-13","2020-03-14","2020-03-15","2020-03-16","2020-03-17","2020-03-18","2020-03-19","2020-03-20","2020-03-21","2020-03-22","2020-03-23","2020-03-24","2020-03-25","2020-03-26","2020-03-27","2020-03-28","2020-03-29","2020-03-30","2020-03-31","2020-04-01","2020-04-02","2020-04-03","2020-04-04","2020-04-05","2020-04-06","2020-04-07","2020-04-08","2020-04-09","2020-04-10","2020-04-11","2020-04-12","2020-04-13","2020-04-14","2020-04-15","2020-04-16","2020-04-17","2020-04-18","2020-04-19","2020-04-20","2020-04-21","2020-04-22","2020-04-23","2020-04-24","2020-04-25","2020-04-26","2020-04-27","2020-04-28","2020-04-29","2020-04-30","2020-05-01","2020-05-02","2020-05-03","2020-05-04","2020-05-05","2020-05-06","2020-05-07","2020-05-08","2020-05-09","2020-05-10","2020-05-11","2020-05-12","2020-05-13","2020-05-14","2020-05-15","2020-05-16","2020-05-17","2020-05-18","2020-05-19","2020-05-20","2020-05-21","2020-05-22","2020-05-23","2020-05-24","2020-05-25","2020-05-26","2020-05-27","2020-05-28","2020-05-29","2020-05-30","2020-05-31","2020-06-01","2020-06-02","2020-06-03","2020-06-04","2020-06-05","2020-06-06","2020-06-07","2020-06-08","2020-06-09","2020-06-10","2020-06-11","2020-06-12","2020-06-13","2020-06-14","2020-06-15","2020-06-16","2020-06-17","2020-06-18","2020-06-19","2020-06-20","2020-06-21","2020-06-22","2020-06-23","2020-06-24","2020-06-25","2020-06-26","2020-06-27","2020-06-28","2020-06-29","2020-06-30","2020-07-01","2020-07-02","2020-07-03","2020-07-04","2020-07-05","2020-07-06","2020-07-07","2020-07-08","2020-07-09","2020-07-10","2020-07-11","2020-07-12","2020-07-13","2020-07-14","2020-07-15","2020-07-16","2020-07-17","2020-07-18","2020-07-19","2020-07-20","2020-07-21","2020-07-22","2020-07-23","2020-07-24","2020-07-25","2020-07-26","2020-07-27","2020-07-28","2020-07-29","2020-07-30","2020-07-31","2020-08-01","2020-08-02","2020-08-03","2020-08-04","2020-08-05","2020-08-06","2020-08-07","2020-08-08","2020-08-09","2020-08-10","2020-08-11","2020-08-12","2020-08-13","2020-08-14","2020-08-15","2020-08-16","2020-08-17","2020-08-18","2020-08-19","2020-08-20","2020-08-21","2020-08-22","2020-08-23","2020-08-24","2020-08-25","2020-08-26","2020-08-27","2020-08-28","2020-08-29","2020-08-30","2020-08-31","2020-09-01","2020-09-02","2020-09-03","2020-09-04","2020-09-05","2020-09-06","2020-09-07","2020-09-08","2020-09-09","2020-09-10","2020-09-11","2020-09-12","2020-09-13","2020-09-14","2020-09-15","2020-09-16","2020-09-17","2020-09-18","2020-09-19","2020-09-20","2020-09-21","2020-09-22","2020-09-23","2020-09-24","2020-09-25","2020-09-26","2020-09-27","2020-09-28","2020-09-29","2020-09-30","2020-10-01","2020-10-02","2020-10-03","2020-10-04","2020-10-05","2020-10-06","2020-10-07","2020-10-08","2020-10-09","2020-10-10","2020-10-11","2020-10-12","2020-10-13","2020-10-14","2020-10-15","2020-10-16","2020-10-17","2020-10-18","2020-10-19","2020-10-20","2020-10-21","2020-10-22","2020-10-23","2020-10-24","2020-10-25","2020-10-26","2020-10-27","2020-10-28","2020-10-29","2020-10-30","2020-10-31","2020-11-01","2020-11-02","2020-11-03","2020-11-04","2020-11-05","2020-11-06","2020-11-07","2020-11-08","2020-11-09","2020-11-10","2020-11-11"],"y":[1,2,2,5,5,5,6,6,8,8,8,11,11,11,12,12,12,12,12,13,13,14,14,14,14,14,14,14,14,16,16,16,16,16,16,17,17,25,32,55,74,107,184,237,403,519,594,782,1147,1586,2219,2978,3212,4659,6444,9101,13594,19958,25953,34753,45975,56552,68586,86479,105119,124641,143572,165581,191949,217768,248157,280154,313152,341337,371523,402921,434937,469586,503122,532480,559439,585230,613821,643829,675352,708158,736009,761690,790112,816150,845447,878692,912444,943811,970860,994019,1018685,1046503,1075952,1110145,1137974,1162440,1185820,1210306,1235409,1263144,1289917,1314874,1333711,1353116,1375837,1396776,1424000,1449194,1473191,1491286,1513285,1534234,1557681,1583306,1606635,1627771,1647796,1666067,1685530,1704065,1726945,1751149,1774929,1794044,1811317,1832630,1852528,1873791,1898856,1920429,1938150,1955626,1973872,1994570,2017755,2042494,2067622,2086889,2106741,2130479,2156343,2184437,2215681,2247701,2273750,2304206,2339892,2374243,2414744,2460026,2502259,2541513,2582155,2628169,2679457,2734545,2787056,2832726,2882609,2926815,2986924,3046099,3109324,3176883,3236904,3295665,3355018,3421975,3489486,3566745,3638373,3700992,3762004,3823833,3888043,3959343,4028242,4101085,4167242,4221682,4278167,4343748,4414969,4482498,4549519,4606881,4653967,4698712,4755955,4809556,4869064,4927065,4982370,5028159,5077610,5124228,5181132,5232864,5297229,5344428,5385713,5421370,5466428,5513628,5557627,5605585,5649537,5683842,5721422,5759622,5805410,5851111,5896974,5942700,5978007,6012417,6054837,6095381,6139219,6189321,6233306,6264439,6288084,6314788,6348392,6384438,6431910,6472695,6507275,6541067,6580076,6618673,6663212,6711623,6755081,6792939,6844398,6884010,6922101,6966478,7016004,7060448,7097782,7129889,7172000,7213103,7258457,7311919,7361432,7397755,7436397,7478869,7529781,7586966,7643192,7697352,7743244,7783806,7836827,7895757,7959978,8028240,8085313,8134652,8201235,8262174,8324808,8397466,8480009,8563885,8625832,8691827,8767420,8845678,8935881,9033677,9122514,9198970,9280850,9403906,9506852,9632552,9757460,9885928,9995708,10115652,10255942,10400075],"mode":"lines","type":"scatter","name":"US Total","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>{-}</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

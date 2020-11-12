@@ -1,5 +1,5 @@
 ---
-title: "Lab 12"
+title: "Final Project"
 author: "Jiahe Chen"
 output: 
     html_document:
@@ -27,35 +27,120 @@ opts_chunk$set(
   out.width = "700px")
 ```
 
-```{r Load Data}
-source ("process_COVID_data.R")
+```{r load}
+
+raw_data <- fread("https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
+
+raw_data [, c("UID", "iso2", "iso3", "code3", "FIPS", "Lat", "Long_", "Country_Region") := NULL]
+raw_data <- filter(raw_data, Province_State != "Diamond Princess" & Province_State != "Grand Princess")
+
+which(is.na(raw_data))
+
+county_case = melt(raw_data,
+                   id.vars = c("Admin2", "Province_State", "Combined_Key"),
+                   measure.vars = 4:ncol(raw_data))
+
+setnames(county_case,
+         c("Admin2", "Province_State", "Combined_Key", "variable", "value"),
+         c("county", "state", "combined_county_name", "date", "case"))
+
+state_case <- as.data.table(rbind(county_case %>% group_by(state, date) %>% summarise(case = sum(case)),
+                    county_case %>% group_by(date) %>% summarise(case = sum(case), state = "US Total")))
+
+state_abbr <- fread("https://github.com/jasonong/List-of-US-States/raw/master/states.csv")
+
+state_case <- merge.data.table(state_case, state_abbr, by.x = "state", by.y = "State", all = TRUE)
+
+setnames(state_case, "Abbreviation", "abbr")
+
+state_case [, new := case - lag(case)]
+state_case [, log_new := log(new)]
+state_case [log_new == -Inf, log_new := 0]
+state_case <- filter(state_case, date != "1/22/20")
+state_case [, date := as.Date(date, "%m/%d/%y")]
+setorder(state_case, state, date)
 ```
 
-```{r Plot 1}
-p1_scatter <- cv_states_today %>% 
-  plot_ly(x = ~pop_density, y = ~deathsper100k,
-          type = 'scatter', mode = 'markers', color = ~state,
-          size = ~population, sizes = c(5, 70), marker = list(sizemode='diameter', opacity=0.5),
-          hoverinfo = 'text',
-          text = ~paste( paste(state, ":", sep=""), paste(" Cases per 100k: ", per100k, sep="") , paste(" Deaths per 100k: ",
-                        deathsper100k, sep=""), sep = "<br>")) %>%
-  layout(title = "Population-normalized COVID-19 deaths vs. population density",
-                  yaxis = list(title = "Deaths per 100k"), xaxis = list(title = "Population Density"),
-         hovermode = "compare")
+```{r plot 1}
 
-# filter out "District of Columbia"
-cv_states_today_scatter <- cv_states_today %>% filter(state!="District of Columbia")
+shadeLimit <- 10
 
-p2_scatter <- cv_states_today_scatter %>% 
-  plot_ly(x = ~pop_density, y = ~deathsper100k,
-          type = 'scatter', mode = 'markers', color = ~state,
-          size = ~population, sizes = c(5, 70), marker = list(sizemode='diameter', opacity=0.5),
-          hoverinfo = 'text',
-          text = ~paste( paste(state, ":", sep=""), paste(" Cases per 100k: ", per100k, sep="") , paste(" Deaths per 100k: ",
-                        deathsper100k, sep=""), sep = "<br>")) %>%
-  layout(title = "Population-normalized COVID-19 deaths vs. population density",
-                  yaxis = list(title = "Deaths per 100k"), xaxis = list(title = "Population Density"),
-         hovermode = "compare")
+may <- state_case %>% filter(date=="2020-05-01") %>% select(state, abbr, case, new, log_new)
+
+may$hover <- with(may, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
+
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white'))
+
+fig <- plot_geo(may, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = 'Reds'
+  )
+fig <- fig %>% colorbar(title = "Log New Cases May 1 2020", limits = c(0,shadeLimit))
+fig <- fig %>% layout(
+    title = paste('Log of New Cases by State <br> (Hover for value)'),
+    geo = set_map_details
+  )
+fig_may <- fig
+
+august <- state_case %>% filter(date=="2020-08-01") %>% select(state, abbr, case, new, log_new)
+
+august$hover <- with(august, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
+
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white'))
+
+fig <- plot_geo(august, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = 'Reds'
+  )
+fig <- fig %>% colorbar(title = "Log New Cases August 1 2020", limits = c(0,shadeLimit))
+fig <- fig %>% layout(
+    title = paste('Log of New Cases by State <br> (Hover for value)'),
+    geo = set_map_details
+  )
+fig_august <- fig
+
+today <- state_case %>% filter(date==Sys.Date()) %>% select(state, abbr, case, new, log_new)
+
+today$hover <- with(august, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
+
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white'))
+
+fig <- plot_geo(today, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~log_new, text = ~hover, locations = ~abbr,
+    color = ~log_new, colors = 'Reds'
+  )
+fig <- fig %>% colorbar(title = "Log New Cases Today", limits = c(0,shadeLimit))
+fig <- fig %>% layout(
+    title = paste('Log of New Cases by State <br> (Hover for value)'),
+    geo = set_map_details
+  )
+fig_today <- fig
+
+plot_1 <- subplot(fig_may, fig_august, fig_today)
+
+```
+
+```{r plot 2-3}
+cal <- state_case %>% filter(state=="California" | state == "US Total")
+
+plot_2 <- plot_ly(cal, x = ~date, y = ~log_new, color = ~state, type = "scatter", mode = "lines")
+
+plot_3 <- plot_ly(cal, x = ~date, y = ~case, color = ~state, type = "scatter", mode = "lines")
 ```
 
 ## Showcasing plots {.tabset}
@@ -63,13 +148,20 @@ p2_scatter <- cv_states_today_scatter %>%
 ### Figure 1
 
 ```{r echo=FALSE}
-p1_scatter
+plot_1
 ```
 
 ### Figure 2
 
 ```{r echo=FALSE}
-p2_scatter
+plot_2
+```
+
+### Figure 3
+
+```{r echo=FALSE}
+plot_3
 ```
 
 {-}
+
