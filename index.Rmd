@@ -34,8 +34,6 @@ raw_data <- fread("https://github.com/CSSEGISandData/COVID-19/raw/master/csse_co
 raw_data [, c("UID", "iso2", "iso3", "code3", "FIPS", "Lat", "Long_", "Country_Region") := NULL]
 raw_data <- filter(raw_data, Province_State != "Diamond Princess" & Province_State != "Grand Princess")
 
-which(is.na(raw_data))
-
 county_case = melt(raw_data,
                    id.vars = c("Admin2", "Province_State", "Combined_Key"),
                    measure.vars = 4:ncol(raw_data))
