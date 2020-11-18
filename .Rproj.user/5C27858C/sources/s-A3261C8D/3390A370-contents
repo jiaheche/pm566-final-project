@@ -130,7 +130,6 @@ fig <- fig %>% layout(
 fig_today <- fig
 
 plot_1 <- subplot(fig_may, fig_august, fig_today)
-
 ```
 
 ```{r plot 2-3}

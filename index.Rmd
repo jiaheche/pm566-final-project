@@ -19,7 +19,7 @@ opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   eval=TRUE,
-  echo = TRUE,
+  echo = FALSE,
   cache = FALSE,
   fig.width = 7, 
   fig.align = 'center',
@@ -27,45 +27,98 @@ opts_chunk$set(
   out.width = "700px")
 ```
 
+## Introduction
+
+The data I am using for the project is the COVID-19 daily cumulative data in the United States, by county and since Jan 22, 2020. It is released and being updated daily by Johns Hopkins University Center for Systems Science and Engineering. 
+
+The question I am trying to answer is 1) whether the COVID-19 pandemic is ending (i.e., are the numbers of new cases/deaths decreasing) specifically in the United States and 2) whether the current lockdown policies are effective against COVID-19 transmission.
+
+## Method
+
+The original dataset can be found in JHU CSSE official github repository for COVID-19 data: https://github.com/CSSEGISandData/COVID-19. 
+
+First, the unneeded variables (for example, "Country" is useless in this project because all the interested data is for the United States) is dropped from the dataset. The original dataset also includes cases in places outside the United States (e.g., the diamond princess cruise ship); as the populations on cruise ships are poorly defined and are relatively small, they are dropped from the dataset. The data for American territories are also dropped. Missing values are checked and no missing value is observed for daily reported case.
+
+The dataset is then reshaped from long to wide for easier interpretation, and variables are renamed accordingly. The county level numbers within each state are added up to get the state level  data, and state level numbers are added up to get the national data. The cumulative case of the previous date is subtracted from that of the current date to calculate the daily new case. Because of that, the data of very first recorded date (Jan 22th) is invalid and dropped. The log transformation is used for better visualization in figures. Finally, the dataset is sorted according to state name and date.
+
 ```{r load}
 
-raw_data <- fread("https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
+raw_case <- fread("https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
+raw_death <- fread("https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv")
 
-raw_data [, c("UID", "iso2", "iso3", "code3", "FIPS", "Lat", "Long_", "Country_Region") := NULL]
-raw_data <- filter(raw_data, Province_State != "Diamond Princess" & Province_State != "Grand Princess")
+raw_case [, c("UID", "iso2", "iso3", "code3", "FIPS", "Lat", "Long_", "Country_Region") := NULL]
+raw_case <- filter(raw_case, Province_State != "Diamond Princess" & Province_State != "Grand Princess")
+raw_death [, c("UID", "iso2", "iso3", "code3", "FIPS", "Lat", "Long_", "Country_Region") := NULL]
+raw_death <- filter(raw_death, Province_State != "Diamond Princess" & Province_State != "Grand Princess")
 
-county_case = melt(raw_data,
+county_case = melt(raw_case,
                    id.vars = c("Admin2", "Province_State", "Combined_Key"),
-                   measure.vars = 4:ncol(raw_data))
+                   measure.vars = 4:ncol(raw_case))
+county_death = melt(raw_death,
+                   id.vars = c("Admin2", "Province_State", "Combined_Key", "Population"),
+                   measure.vars = 5:ncol(raw_case))
 
 setnames(county_case,
          c("Admin2", "Province_State", "Combined_Key", "variable", "value"),
          c("county", "state", "combined_county_name", "date", "case"))
+setnames(county_death,
+         c("Admin2", "Province_State", "Combined_Key", "Population", "variable", "value"),
+         c("county", "state", "combined_county_name", "population", "date", "death"))
 
-state_case <- as.data.table(rbind(county_case %>% group_by(state, date) %>% summarise(case = sum(case)),
-                    county_case %>% group_by(date) %>% summarise(case = sum(case), state = "US Total")))
+county_all <- filter(merge.data.table(county_case, county_death, by = c("county", "state", "combined_county_name", "date")),
+                     state != "American Samoa" & state != "Guam" & state != "Northern Mariana Islands" &
+                       state != "Virgin Islands")
+
+state_all <- as.data.table(rbind(county_all %>% group_by(state, date)
+                                              %>% summarise(case = sum(case), death = sum(death), population = sum(population)),
+                                  county_all %>% group_by(date)
+                                              %>% summarise(case = sum(case), death = sum(death), population = sum(population),
+                                                            state = "US Total")))
 
 state_abbr <- fread("https://github.com/jasonong/List-of-US-States/raw/master/states.csv")
+state_all <- merge.data.table(state_all, state_abbr, by.x = "state", by.y = "State", all = TRUE)
+setnames(state_all, "Abbreviation", "abbr")
 
-state_case <- merge.data.table(state_case, state_abbr, by.x = "state", by.y = "State", all = TRUE)
+state_all [, new_case := case - lag(case)]
+state_all [, new_death := death - lag(death)]
 
-setnames(state_case, "Abbreviation", "abbr")
+#state_all [, pop_adj_new_case := new_case/population]
+#state_all [, pop_adj_new_death := new_death/population]
 
-state_case [, new := case - lag(case)]
-state_case [, log_new := log(new)]
-state_case [log_new == -Inf, log_new := 0]
-state_case <- filter(state_case, date != "1/22/20")
-state_case [, date := as.Date(date, "%m/%d/%y")]
-setorder(state_case, state, date)
+state_all [, log_new_case := log(new_case)]
+state_all [, log_new_death := log(new_death)]
+
+state_all [log_new_case == -Inf, log_new_case := 0]
+state_all [log_new_death == -Inf, log_new_death := 0]
+
+state_all <- filter(state_all, date != "1/22/20")
+state_all [, date := as.Date(date, "%m/%d/%y")]
+setorder(state_all, state, date)
+```
+
+```{r table 1 & 2}
+t1 <- datatable((state_all  %>% group_by(state) %>% 
+        summarise(avg_new_case = round(mean(new_case), digits = 0), max_new_case = max(new_case), today_new_case = last(new_case),
+                  avg_new_death = round(mean(new_death), digits = 0), max_new_death = max(new_death), today_new_death = last(new_death))),
+      colnames = c("State",
+                   "Average Daily New Cases",
+                    "Largest Daily New Cases", "Yesterday's New Cases",
+                   "Average Daily New Deaths",
+                    "Largest Daily New Deaths", "Yesterday's New Deaths"),
+       caption = "Summary of COVID-19 Daily New Cases/Deaths Since Jan 23rd")
 ```
 
 ```{r plot 1}
+line1 <- plot_ly((state_all %>% filter(state == "California" | state == "US Total" )), x = ~date, y = ~log_new_case, color = ~state, type = "scatter", mode = "lines")
+line2 <- plot_ly((state_all %>% filter(state == "California" | state == "US Total" )), x = ~date, y = ~log_new_death, color = ~state, type = "scatter", mode = "lines")
+plot_1 <- subplot(line1, line2)
+```
 
-shadeLimit <- 10
+```{r plot 2}
+may <- state_all %>% filter(date=="2020-05-01") %>% select(state, abbr, case, death, new_case, new_death, log_new_case, log_new_death)
 
-may <- state_case %>% filter(date=="2020-05-01") %>% select(state, abbr, case, new, log_new)
-
-may$hover <- with(may, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
+may$hover <- with(may, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "Cumulative Deaths: ", death,
+                             '<br>', "New Cases: ", new_case, '<br>', "New Deaths: ", new_death))
 
 set_map_details <- list(
   scope = 'usa',
@@ -75,73 +128,69 @@ set_map_details <- list(
 
 fig <- plot_geo(may, locationmode = 'USA-states') %>% 
   add_trace(
-    z = ~log_new, text = ~hover, locations = ~abbr,
-    color = ~log_new, colors = 'Reds'
+    z = ~log_new_case, text = ~hover, locations = ~abbr,
+    color = ~log_new_case, colors = 'Blues'
   )
-fig <- fig %>% colorbar(title = "Log New Cases May 1 2020", limits = c(0,shadeLimit))
+fig <- fig %>% colorbar(title = "Log New Cases May 1 2020", limits = c(0,11))
 fig <- fig %>% layout(
     title = paste('Log of New Cases by State <br> (Hover for value)'),
     geo = set_map_details
   )
-fig_may <- fig
+fig_may_case <- fig
 
-august <- state_case %>% filter(date=="2020-08-01") %>% select(state, abbr, case, new, log_new)
-
-august$hover <- with(august, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
-
-set_map_details <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white'))
-
-fig <- plot_geo(august, locationmode = 'USA-states') %>% 
+fig <- plot_geo(may, locationmode = 'USA-states') %>% 
   add_trace(
-    z = ~log_new, text = ~hover, locations = ~abbr,
-    color = ~log_new, colors = 'Reds'
+    z = ~log_new_death, text = ~hover, locations = ~abbr,
+    color = ~log_new_death, colors = 'Reds'
   )
-fig <- fig %>% colorbar(title = "Log New Cases August 1 2020", limits = c(0,shadeLimit))
+fig <- fig %>% colorbar(title = "Log New Deaths May 1 2020", limits = c(0,8))
 fig <- fig %>% layout(
-    title = paste('Log of New Cases by State <br> (Hover for value)'),
+    title = paste('Log of New Deaths by State <br> (Hover for value)'),
     geo = set_map_details
   )
-fig_august <- fig
+fig_may_death <- fig
 
-today <- state_case %>% filter(date==Sys.Date()) %>% select(state, abbr, case, new, log_new)
+today <- state_all %>% filter(date=="2020-11-16") %>% select(state, abbr, case, death, new_case, new_death, log_new_case, log_new_death)
 
-today$hover <- with(august, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "New Cases: ", new))
-
-set_map_details <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white'))
+today$hover <- with(today, paste(state, '<br>', "Cumulative Cases: ", case, '<br>', "Cumulative Deaths: ", death,
+                             '<br>', "New Cases: ", new_case, '<br>', "New Deaths: ", new_death))
 
 fig <- plot_geo(today, locationmode = 'USA-states') %>% 
   add_trace(
-    z = ~log_new, text = ~hover, locations = ~abbr,
-    color = ~log_new, colors = 'Reds'
+    z = ~log_new_case, text = ~hover, locations = ~abbr,
+    color = ~log_new_case, colors = 'Blues'
   )
-fig <- fig %>% colorbar(title = "Log New Cases Today", limits = c(0,shadeLimit))
+fig <- fig %>% colorbar(title = "Log New Cases Yesterday", limits = c(0,11))
 fig <- fig %>% layout(
     title = paste('Log of New Cases by State <br> (Hover for value)'),
     geo = set_map_details
   )
-fig_today <- fig
+fig_today_case <- fig
 
-plot_1 <- subplot(fig_may, fig_august, fig_today)
+fig <- plot_geo(today, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~log_new_death, text = ~hover, locations = ~abbr,
+    color = ~log_new_death, colors = 'Reds'
+  )
+fig <- fig %>% colorbar(title = "Log New Deaths Yesterday", limits = c(0,8))
+fig <- fig %>% layout(
+    title = paste('Log of New Deaths by State <br> (Hover for value)'),
+    geo = set_map_details
+  )
+fig_today_death <- fig
 
+plot_2 <- subplot(fig_may_case, fig_today_case)
+plot_3 <- subplot(fig_may_death, fig_today_death)
 ```
 
-```{r plot 2-3}
-cal <- state_case %>% filter(state=="California" | state == "US Total")
 
-plot_2 <- plot_ly(cal, x = ~date, y = ~log_new, color = ~state, type = "scatter", mode = "lines")
+## Results {.tabset}
 
-plot_3 <- plot_ly(cal, x = ~date, y = ~case, color = ~state, type = "scatter", mode = "lines")
+### Table 1
+
+```{r echo=FALSE}
+t1
 ```
-
-## Showcasing plots {.tabset}
 
 ### Figure 1
 
@@ -160,6 +209,8 @@ plot_2
 ```{r echo=FALSE}
 plot_3
 ```
-
 {-}
 
+## Conclusion
+
+Based on the table and figure, we conclude that the pandemic is still far from ending in the United States in terms of cases, but is getting better in terms of deaths. Although the recent daily new cases have dropped significantly from the July and August peak, today's new cases are still quite high. The time series figure suggests that the daily new cases do not have a clear declining trend yet, and the pre-post comparison in geoplot figure suggests that the current lockdown policies are not quite effective against this pandemic so far.
