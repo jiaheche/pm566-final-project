@@ -2,11 +2,7 @@
 title: "Trend of Current COVID-19 Pandemic in the United States"
 author: "Jiahe Chen"
 output:
-  pdf_document:
-    toc: yes
-  html_document:
-    toc: yes
-    toc_float: yes
+  pdf_document: default
 ---
 
 ## Introduction 
@@ -29,8 +25,9 @@ Specially, the JHU COVID-19 datasets do not include the abbreviations of US stat
 library(data.table)
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
+library(maps)
 library(plotly)
-library(DT)
 library(knitr)
 
 opts_chunk$set(
@@ -38,11 +35,7 @@ opts_chunk$set(
   message = FALSE,
   eval=TRUE,
   echo = FALSE,
-  cache = FALSE,
-  fig.width = 7, 
-  fig.align = 'center',
-  fig.asp = 0.618,
-  out.width = "700px")
+  cache = FALSE)
 ```
 
 ```{r load}
@@ -101,7 +94,7 @@ setorder(state_all, state, date)
 ```
 
 ```{r table 1 & 2}
-t1 <- datatable((state_all  %>% group_by(state) %>% 
+t1 <- kable((state_all  %>% group_by(state) %>% 
         summarise(avg_new_case = round(mean(new_case), digits = 0), max_new_case = max(new_case), today_new_case = last(new_case),
                   avg_new_death = round(mean(new_death), digits = 0), max_new_death = max(new_death), today_new_death = last(new_death))),
       colnames = c("State",
@@ -112,9 +105,12 @@ t1 <- datatable((state_all  %>% group_by(state) %>%
 ```
 
 ```{r plot 1}
-line1 <- plot_ly((state_all %>% filter(state == "California" | state == "US Total" )), x = ~date, y = ~log_new_case, color = ~state, type = "scatter", mode = "lines")
-line2 <- plot_ly((state_all %>% filter(state == "California" | state == "US Total" )), x = ~date, y = ~log_new_death, color = ~state, type = "scatter", mode = "lines")
-plot_1 <- subplot(line1, line2)
+line1 <- state_all %>% filter(state == "California" | state == "US Total") %>%
+  ggplot(mapping = aes(x = date, y = log_new_case, color = state))+
+  geom_line()
+line2 <- state_all %>% filter(state == "California" | state == "US Total") %>%
+  ggplot(mapping = aes(x = date, y = log_new_death, color = state))+
+  geom_line()
 ```
 
 ```{r plot 2}
@@ -202,7 +198,7 @@ line2
 
 - Along with the table, the time series also suggest that even though the new cases are increasing wildly, the numbers of daily new deaths are relatively small and do not have obvious trends of increasing like daily new cases do as the recent winter flu season begins.
 
-### Figure 2: Geo plot of Differences of Daily New Cases/Deaths Nov 16 vs. May 1 by State 
+## Figure 2: Geo plot of Differences of Daily New Cases/Deaths Nov 16 vs. May 1 by State (Please refer to website for correct view of the figures - I could not make them show correctly in pdf)
 
 #### Cases
 
