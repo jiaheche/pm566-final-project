@@ -9,9 +9,21 @@ output:
     toc_float: yes
 ---
 
-** This website is to show the tables and figures of an analysis on the trend of current COVID-19 pandemic in the United States.
+## Introduction 
 
-** Link to the pdf report: https://github.com/jiaheche/pm566-final-project/blob/master/report.pdf
+The objectives of this project is to explore 1) whether the COVID-19 pandemic is ending (i.e., are the numbers of new cases/deaths decreasing) specifically in the United States and 2) whether the current lockdown policies are effective against COVID-19 transmission (i.e., whether there are significant differences between the numbers of new cases/deaths pre- versus post-lockdown.
+
+The data being used for the project is the daily data of cumulative confirmed cases of COVID-19 and cumulative deaths from COVID-19 in the United States, by county and since Jan 22nd, 2020. It is released and currently being updated on daily basis by Johns Hopkins University Center for Systems Science and Engineering.
+
+## Methods
+
+The original dataset can be found in JHU CSSE official github repository for COVID-19 data: https://github.com/CSSEGISandData/COVID-19. There are 3338 rows and 311 columns in the raw data of cases, 3338 rows and 312 columns in the raw data of deaths. 
+
+First, the unneeded variables (for example, "Country" is useless in this project because all the interested data is for the United States) is dropped from the dataset. The original dataset also includes cases and deaths in places outside the United States (e.g., the diamond princess cruise ship); as the populations on cruise ships are poorly defined and are relatively small, they are dropped from the dataset. The data for American territories are also dropped for similar reasons. Missing values are checked and no missing value is observed for daily reported cases and deaths.
+
+The case and death datasets are then 1) reshaped from long to wide and 2) combined for easier interpretation. Variables are renamed accordingly. The county level numbers within each state are added up to get the state level data, and state level numbers are added up to get the US national level data, listed as "US total". The cumulative case/death of the previous date is subtracted from that of the current date to calculate the daily new case/death. Because of that, the data of very first recorded date (Jan 22th) is invalid and dropped. The log transformation is used for better visualization in figures; when the log transformation produced -Inf due to 0s in the raw data, the -Infs are replaced by 0s for easier processing.
+
+Specially, the JHU COVID-19 datasets do not include the abbreviations of US states. As such, a third-party dataset which converts full names of US states to their standard abbreviations was found in Github and used in this project: https://github.com/jasonong/List-of-US-States/raw/master/states.csv. Finally, the dataset is sorted according to state name and date. There are 16271 rows and 10 columns in the final processed version of the dataset.
 
 ```{r setup, message=FALSE, echo=FALSE, warning=FALSE}
 library(data.table)
@@ -74,8 +86,8 @@ setnames(state_all, "Abbreviation", "abbr")
 state_all [, new_case := case - lag(case)]
 state_all [, new_death := death - lag(death)]
 
-#state_all [, new_case_per10k := new_case/population*10000]
-#state_all [, new_death_per10k := new_death/population*10000]
+#state_all [, pop_adj_new_case := new_case/population]
+#state_all [, pop_adj_new_death := new_death/population]
 
 state_all [, log_new_case := log(new_case)]
 state_all [, log_new_death := log(new_death)]
@@ -163,15 +175,18 @@ fig <- fig %>% layout(
   )
 fig_death <- fig
 ```
+## Results
 
-
-## Table 1: Descriptive Stats of COVID-19 Daily New Cases/Deaths Since Jan 23rd 
+### Table 1: Descriptive Stats of COVID-19 Daily New Cases/Deaths Since Jan 23rd 
 
 ```{r echo=FALSE}
 t1
 ```
 
-## Figure 1: Time series of Log of COVID-19 Daily New Cases/Deaths in California and the United States
+- According to the table, the recent daily new cases are quite high throughout the United States - although in some states smaller than the major peak back in July/August, they are far larger than the average daily new cases since the start of the pandemic.
+- However, the pandemic is rather mild in terms of daily new deaths - in many states, the recent daily new deaths are at about the same level as average since the start of the pandemic, and the absolute numbers are kept at a relatively low level.
+
+### Figure 1: Time series of Log of COVID-19 Daily New Cases/Deaths in California and the United States
 
 #### Cases
 
@@ -185,7 +200,9 @@ line1
 line2
 ```
 
-## Figure 2: Geo plot of Differences of Daily New Cases/Deaths Nov 16 vs. May 1 by State 
+- Along with the table, the time series also suggest that even though the new cases are increasing wildly, the numbers of daily new deaths are relatively small and do not have obvious trends of increasing like daily new cases do as the recent winter flu season begins.
+
+### Figure 2: Geo plot of Differences of Daily New Cases/Deaths Nov 16 vs. May 1 by State 
 
 #### Cases
 
@@ -199,3 +216,8 @@ fig_case
 fig_death
 ```
 
+- Finally, the geo plot comparing the new cases/deaths pre- and post-pandemic gives similar answers as the table and figures do above. Again, the lockdown policies do not seem to have much effect on controlling cases, but are able to reduce the numbers of new deaths significantly, either on its own scale or compared to the trend of new cases.
+
+## Conclusion
+
+Based on the table and figures, we conclude that the pandemic is still far from ending in the United States in terms of cases, but is getting better in terms of deaths. Although the recent daily new cases have once dropped significantly from the July and August peak, the time series figure suggests the new cases are having an increasing trend as the winter flu season comes in, and even though the death numbers are milder, the daily new deaths still do not have a clear declining trend yet. The pre-post comparison in geoplot figure also points out that the current lockdown policies are not quite effective against the virus transmission in this pandemic so far, but may have shown some effects in controlling the deaths due to COVID-19.
